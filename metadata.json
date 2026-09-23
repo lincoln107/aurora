@@ -1,0 +1,6 @@
+{
+  "name": "Aurora Residences - Apartamentos de Alto Padrão",
+  "description": "Landing page exclusiva para venda de apartamentos modernos de alto padrão em localização privilegiada.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
