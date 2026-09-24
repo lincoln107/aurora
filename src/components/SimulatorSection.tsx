@@ -1,22 +1,20 @@
-import React, { useState } from "react";
-import { Calculator, ArrowRight, CheckCircle2, DollarSign, Percent, ShieldCheck } from "lucide-react";
-import { INTEREST_FORM_URL } from "../data/apartmentData";
+import React, { useState, useEffect } from "react";
+import { Calculator, ArrowRight, CheckCircle2, DollarSign, Percent, ShieldCheck, MapPin } from "lucide-react";
+import { Development } from "../data/apartmentData";
 
-export const SimulatorSection: React.FC = () => {
-  const [apartmentValue, setApartmentValue] = useState<number>(1480000);
+interface SimulatorSectionProps {
+  currentDev: Development;
+}
+
+export const SimulatorSection: React.FC<SimulatorSectionProps> = ({ currentDev }) => {
+  const [apartmentValue, setApartmentValue] = useState<number>(currentDev.priceValueNum);
   const [downPaymentPercent, setDownPaymentPercent] = useState<number>(25);
 
-  const presets = [
-    { label: "128 m² · 3 Suítes", value: 1480000 },
-    { label: "186 m² · 4 Suítes", value: 2190000 },
-    { label: "284 m² · Cobertura VIP", value: 3850000 },
-  ];
+  useEffect(() => {
+    setApartmentValue(currentDev.priceValueNum);
+  }, [currentDev.id]);
 
   // Calculations:
-  // Down payment (Entrada): e.g. 25%
-  // During construction (36 months): 15% split in 36 installments
-  // Intermediary semi-annual balloons (6x): 10%
-  // Final financing at key delivery: 50%
   const downPaymentValue = (apartmentValue * downPaymentPercent) / 100;
   const duringConstructionPercent = 15;
   const balloonPercent = 10;
@@ -24,7 +22,7 @@ export const SimulatorSection: React.FC = () => {
 
   const monthlyInstallment = (apartmentValue * (duringConstructionPercent / 100)) / 36;
   const semiAnnualInstallment = (apartmentValue * (balloonPercent / 100)) / 6;
-  const bankFinancingValue = (apartmentValue * (Math.max(0, finalBalancePercent) / 100));
+  const bankFinancingValue = apartmentValue * (Math.max(0, finalBalancePercent) / 100);
 
   const formatCurrency = (val: number) => {
     return new Intl.NumberFormat("pt-BR", {
@@ -41,10 +39,10 @@ export const SimulatorSection: React.FC = () => {
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 text-amber-400 text-xs font-semibold uppercase tracking-widest mb-3">
             <Calculator className="w-3.5 h-3.5" />
-            <span>Condições Facilitadas de Obra</span>
+            <span>Condições Facilitadas de Obra · {currentDev.name}</span>
           </div>
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-serif-luxury leading-tight">
-            Simulador de Investimento & Pagamento
+            Simulador de Pagamento em {currentDev.shortNeighborhood}
           </h2>
           <p className="mt-4 text-stone-300 text-sm sm:text-base leading-relaxed">
             Monte o plano financeiro ideal para sua família. Fluxo direto com a incorporadora durante a obra e saldo financiado pelo banco de sua preferência.
@@ -58,137 +56,144 @@ export const SimulatorSection: React.FC = () => {
             <div className="lg:col-span-6 space-y-6">
               <div>
                 <label className="text-xs uppercase tracking-wider text-stone-400 font-semibold block mb-2">
-                  1. Escolha a Tipologia ou Valor do Imóvel:
+                  Selecione a Tipologia ou Valor do Imóvel ({currentDev.shortNeighborhood})
                 </label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
-                  {presets.map((preset, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setApartmentValue(preset.value)}
-                      className={`p-2.5 rounded-lg text-xs font-bold transition-all border cursor-pointer text-left sm:text-center ${
-                        apartmentValue === preset.value
-                          ? "bg-amber-500 text-stone-950 border-amber-400 shadow-md"
-                          : "bg-stone-950 text-stone-300 border-stone-800 hover:border-stone-700"
-                      }`}
-                    >
-                      {preset.label}
-                    </button>
-                  ))}
+                  {currentDev.typologies.map((plan, idx) => {
+                    // Extract approximate numeric value or fallback
+                    const val = idx === 0 ? currentDev.priceValueNum : idx === 1 ? Math.round(currentDev.priceValueNum * 1.48) : Math.round(currentDev.priceValueNum * 2.3);
+                    return (
+                      <button
+                        key={plan.id}
+                        type="button"
+                        onClick={() => setApartmentValue(val)}
+                        className={`p-2.5 rounded-xl text-left border transition-all text-xs cursor-pointer ${
+                          apartmentValue === val
+                            ? "bg-amber-500/20 border-amber-400 text-white font-bold"
+                            : "bg-stone-950/60 border-stone-800 text-stone-400 hover:text-white"
+                        }`}
+                      >
+                        <span className="block font-semibold">{plan.area}</span>
+                        <span className="text-[10px] text-amber-400">{formatCurrency(val)}</span>
+                      </button>
+                    );
+                  })}
                 </div>
 
                 {/* Range Slider for Value */}
-                <div className="flex items-center justify-between text-xs text-stone-400 mb-1">
-                  <span>R$ 1.200.000</span>
-                  <span className="text-amber-400 font-bold text-sm">
-                    {formatCurrency(apartmentValue)}
-                  </span>
-                  <span>R$ 4.500.000</span>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center text-xs">
+                    <span className="text-stone-400">Ajuste Livre do Valor:</span>
+                    <span className="text-base font-bold text-amber-400 font-mono">
+                      {formatCurrency(apartmentValue)}
+                    </span>
+                  </div>
+                  <input
+                    type="range"
+                    min={Math.round(currentDev.priceValueNum * 0.8)}
+                    max={Math.round(currentDev.priceValueNum * 3.5)}
+                    step={20000}
+                    value={apartmentValue}
+                    onChange={(e) => setApartmentValue(Number(e.target.value))}
+                    className="w-full h-2 bg-stone-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
+                  />
                 </div>
-                <input
-                  type="range"
-                  min="1200000"
-                  max="4500000"
-                  step="50000"
-                  value={apartmentValue}
-                  onChange={(e) => setApartmentValue(Number(e.target.value))}
-                  className="w-full h-2 bg-stone-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
-                />
               </div>
 
-              {/* Slider for Down Payment */}
-              <div>
-                <div className="flex items-center justify-between text-xs text-stone-400 mb-1">
-                  <span className="uppercase tracking-wider font-semibold">2. Entrada Sugerida (%):</span>
-                  <span className="text-amber-400 font-bold text-sm">{downPaymentPercent}% ({formatCurrency(downPaymentValue)})</span>
+              {/* Down Payment % Slider */}
+              <div className="space-y-2 pt-2">
+                <div className="flex justify-between items-center text-xs">
+                  <span className="text-stone-400">Entrada Facilitada no Ato:</span>
+                  <span className="text-sm font-bold text-white font-mono">
+                    {downPaymentPercent}% ({formatCurrency(downPaymentValue)})
+                  </span>
                 </div>
                 <input
                   type="range"
-                  min="15"
-                  max="40"
-                  step="5"
+                  min={15}
+                  max={50}
+                  step={5}
                   value={downPaymentPercent}
                   onChange={(e) => setDownPaymentPercent(Number(e.target.value))}
                   className="w-full h-2 bg-stone-800 rounded-lg appearance-none cursor-pointer accent-amber-500"
                 />
-                <span className="text-[11px] text-stone-400 block mt-1">
-                  * A entrada pode ser dividida em ato + 30 e 60 dias.
-                </span>
+                <div className="flex justify-between text-[10px] text-stone-500">
+                  <span>15% (Mínimo no ato)</span>
+                  <span>30% (Recomendado)</span>
+                  <span>50%</span>
+                </div>
               </div>
 
-              {/* Safe investment badge */}
-              <div className="p-4 rounded-xl bg-stone-950/60 border border-stone-800 flex items-start gap-3">
-                <ShieldCheck className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
-                <p className="text-xs text-stone-400 leading-relaxed">
-                  Patrimônio de Afetação registrado em cartório: garantia de segregação total dos recursos e entrega rigorosamente no prazo.
+              <div className="p-4 rounded-xl bg-stone-950/60 border border-stone-800 text-xs text-stone-400 space-y-1.5">
+                <div className="flex items-center gap-2 text-stone-300 font-semibold">
+                  <ShieldCheck className="w-4 h-4 text-amber-400" />
+                  <span>Flexibilidade de Negociação Personalizada</span>
+                </div>
+                <p>
+                  As parcelas podem ser customizadas de acordo com o seu fluxo de recebimento (anuais, semestrais ou mensais).
                 </p>
               </div>
             </div>
 
-            {/* Results Card Side */}
-            <div className="lg:col-span-6 bg-stone-950 p-6 sm:p-8 rounded-2xl border border-amber-500/20 shadow-xl">
-              <div className="flex items-center justify-between border-b border-stone-800 pb-4 mb-5">
-                <div>
-                  <span className="text-[11px] uppercase text-stone-400 font-semibold tracking-wider block">
-                    Resumo do Fluxo Estimado
+            {/* Results Output Card */}
+            <div className="lg:col-span-6 bg-gradient-to-br from-stone-950 to-stone-900 border border-amber-500/30 p-6 sm:p-8 rounded-2xl relative overflow-hidden shadow-xl">
+              <div className="space-y-5">
+                <div className="border-b border-stone-800 pb-4">
+                  <span className="text-xs uppercase tracking-wider text-amber-400 font-bold block mb-1">
+                    Simulação para {currentDev.name}
                   </span>
-                  <span className="text-xl sm:text-2xl font-bold text-white font-serif-luxury">
+                  <div className="text-2xl sm:text-3xl font-bold text-white font-serif-luxury">
                     {formatCurrency(apartmentValue)}
-                  </span>
+                  </div>
+                  <div className="text-xs text-stone-400 mt-0.5">
+                    Endereço: {currentDev.address}
+                  </div>
                 </div>
-                <span className="text-xs font-bold text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30">
-                  36 meses de obra
-                </span>
+
+                {/* Breakdown items */}
+                <div className="space-y-3 text-xs sm:text-sm">
+                  <div className="flex items-center justify-between pb-2 border-b border-stone-800/60">
+                    <span className="text-stone-300">Entrada no Ato ({downPaymentPercent}%):</span>
+                    <span className="font-bold text-white font-mono">{formatCurrency(downPaymentValue)}</span>
+                  </div>
+
+                  <div className="flex items-center justify-between pb-2 border-b border-stone-800/60">
+                    <div>
+                      <span className="text-stone-300 block">36 Mensais durante a obra:</span>
+                      <span className="text-[10px] text-stone-500">Fluxo suave sem juros de banco</span>
+                    </div>
+                    <span className="font-bold text-amber-400 font-mono">{formatCurrency(monthlyInstallment)}/mês</span>
+                  </div>
+
+                  <div className="flex items-center justify-between pb-2 border-b border-stone-800/60">
+                    <div>
+                      <span className="text-stone-300 block">6 Intermediárias Semestrais:</span>
+                      <span className="text-[10px] text-stone-500">Parcelas reforçadas a cada 6 meses</span>
+                    </div>
+                    <span className="font-bold text-white font-mono">{formatCurrency(semiAnnualInstallment)}</span>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-1">
+                    <div>
+                      <span className="text-stone-300 block font-semibold">Financiamento nas Chaves:</span>
+                      <span className="text-[10px] text-stone-400">Banco de sua preferência</span>
+                    </div>
+                    <span className="font-bold text-emerald-400 font-mono text-base">{formatCurrency(bankFinancingValue)}</span>
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <a
+                    href={currentDev.formUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-amber-500/20"
+                  >
+                    <span>Quero Proposta com Esta Simulação</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
               </div>
-
-              {/* Breakdown Rows */}
-              <div className="space-y-3.5 mb-6">
-                <div className="flex items-center justify-between text-xs sm:text-sm">
-                  <span className="text-stone-400 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                    Entrada ({downPaymentPercent}%):
-                  </span>
-                  <span className="font-bold text-white">{formatCurrency(downPaymentValue)}</span>
-                </div>
-
-                <div className="flex items-center justify-between text-xs sm:text-sm">
-                  <span className="text-stone-400 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                    36 Parcelas Mensais na Obra:
-                  </span>
-                  <span className="font-bold text-amber-300">{formatCurrency(monthlyInstallment)} / mês</span>
-                </div>
-
-                <div className="flex items-center justify-between text-xs sm:text-sm">
-                  <span className="text-stone-400 flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                    6 Balões Semestrais:
-                  </span>
-                  <span className="font-bold text-white">{formatCurrency(semiAnnualInstallment)} / sem</span>
-                </div>
-
-                <div className="flex items-center justify-between text-xs sm:text-sm pt-2 border-t border-stone-850">
-                  <span className="text-stone-300 font-medium flex items-center gap-1.5">
-                    <DollarSign className="w-3.5 h-3.5 text-amber-400" />
-                    Saldo no Financiamento Bancário:
-                  </span>
-                  <span className="font-bold text-emerald-400">{formatCurrency(bankFinancingValue)}</span>
-                </div>
-              </div>
-
-              {/* Direct CTA */}
-              <a
-                href={INTEREST_FORM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-3 py-4 px-6 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-bold text-xs sm:text-sm uppercase tracking-wider transition-all shadow-xl hover:shadow-amber-500/25"
-              >
-                <span>Tenho Interesse nesta Condição</span>
-                <ArrowRight className="w-4 h-4" />
-              </a>
-
-              <p className="text-[11px] text-stone-500 text-center mt-3">
-                * Valores orientativos sujeitos a aprovação de crédito e tabela de vendas vigente.
-              </p>
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ interface LightboxModalProps {
   photos: GalleryPhoto[];
   onClose: () => void;
   onSelectPhoto: (photo: GalleryPhoto) => void;
+  formUrl?: string;
 }
 
 export const LightboxModal: React.FC<LightboxModalProps> = ({
@@ -14,6 +15,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   photos,
   onClose,
   onSelectPhoto,
+  formUrl = INTEREST_FORM_URL,
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -103,7 +105,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
           </div>
 
           <a
-            href={INTEREST_FORM_URL}
+            href={formUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold text-sm transition-all shadow-lg hover:shadow-amber-500/20 whitespace-nowrap"

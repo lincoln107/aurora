@@ -1,40 +1,20 @@
 import React from "react";
-import { Building2, Sparkles, ShieldCheck, Zap, VolumeX, Leaf, ArrowRight } from "lucide-react";
-import { INTEREST_FORM_URL } from "../data/apartmentData";
+import { Building2, Sparkles, ShieldCheck, Zap, VolumeX, Leaf, ArrowRight, MapPin } from "lucide-react";
+import { Development } from "../data/apartmentData";
 
-export const AboutSection: React.FC = () => {
-  const highlights = [
-    {
-      icon: <Building2 className="w-6 h-6 text-amber-400" />,
-      title: "Torre Única & Exclusiva",
-      description: "Terreno generoso com apenas 2 apartamentos por andar, garantindo privacidade, ventilação cruzada e luminosidade inigualável."
-    },
-    {
-      icon: <Sparkles className="w-6 h-6 text-amber-400" />,
-      title: "Arquitetura Biofílica & Autoral",
-      description: "Fachada arrojada com brises dinâmicos, floreiras automatizadas e esquadrias piso-teto que trazem o verde para dentro do seu living."
-    },
-    {
-      icon: <VolumeX className="w-6 h-6 text-amber-400" />,
-      title: "Atenuação Acústica Superior",
-      description: "Mantas de alta densidade no contrapiso e vidros laminados especiais para silêncio e repouso completo da sua família."
-    },
-    {
-      icon: <Leaf className="w-6 h-6 text-amber-400" />,
-      title: "Sustentabilidade & Eletromobilidade",
-      description: "Ponto de recarga individual para carro elétrico em todas as vagas, painéis solares para áreas sociais e captação de água da chuva."
-    },
-    {
-      icon: <Zap className="w-6 h-6 text-amber-400" />,
-      title: "Gerador Full 100%",
-      description: "Continuidade total: o gerador alimenta todo o edifício, incluindo elevadores, ar-condicionado e tomadas internas das unidades."
-    },
-    {
-      icon: <ShieldCheck className="w-6 h-6 text-amber-400" />,
-      title: "Segurança de Alta Tecnologia",
-      description: "Portaria blindada 24 horas, reconhecimento facial, eclusa dupla para pedestres e veículos, e monitoramento perimetral inteligente."
-    }
-  ];
+interface AboutSectionProps {
+  currentDev: Development;
+}
+
+export const AboutSection: React.FC<AboutSectionProps> = ({ currentDev }) => {
+  const iconMap: Record<string, React.ReactNode> = {
+    Building2: <Building2 className="w-6 h-6 text-amber-400" />,
+    Sparkles: <Sparkles className="w-6 h-6 text-amber-400" />,
+    ShieldCheck: <ShieldCheck className="w-6 h-6 text-amber-400" />,
+    Leaf: <Leaf className="w-6 h-6 text-amber-400" />,
+    Zap: <Zap className="w-6 h-6 text-amber-400" />,
+    VolumeX: <VolumeX className="w-6 h-6 text-amber-400" />,
+  };
 
   return (
     <section id="sobre" className="py-20 lg:py-28 bg-stone-950 border-t border-stone-900 relative">
@@ -42,9 +22,10 @@ export const AboutSection: React.FC = () => {
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div className="max-w-2xl">
-            <span className="text-amber-400 font-semibold text-xs uppercase tracking-widest block mb-2">
-              Diferenciais de Engenharia & Design
-            </span>
+            <div className="inline-flex items-center gap-2 text-amber-400 font-semibold text-xs uppercase tracking-widest mb-2">
+              <MapPin className="w-3.5 h-3.5" />
+              <span>Diferenciais · {currentDev.name} ({currentDev.shortNeighborhood})</span>
+            </div>
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-serif-luxury leading-tight">
               Cada detalhe planejado para elevar seu padrão de vida.
             </h2>
@@ -52,50 +33,55 @@ export const AboutSection: React.FC = () => {
 
           <div className="max-w-md">
             <p className="text-stone-400 text-sm sm:text-base leading-relaxed">
-              O Aurora Residences reúne inovação construtiva, conforto térmico e tecnologias pensadas para valorizar seu patrimônio por décadas.
+              O <strong>{currentDev.fullName}</strong> reúne inovação construtiva, conforto térmico e tecnologias sustentáveis na melhor localização de {currentDev.neighborhood}.
             </p>
           </div>
         </div>
 
         {/* Feature Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-          {highlights.map((item, idx) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {currentDev.highlights.map((item, idx) => (
             <div
               key={idx}
-              className="p-6 sm:p-8 rounded-2xl bg-stone-900/60 border border-stone-800 hover:border-amber-500/40 transition-all duration-300 group hover:-translate-y-1 hover:shadow-xl hover:shadow-black/50"
+              className="p-8 rounded-2xl bg-stone-900/60 border border-stone-850 hover:border-amber-500/40 transition-all duration-300 group hover:-translate-y-1 shadow-lg"
             >
-              <div className="w-12 h-12 rounded-xl bg-stone-800/80 group-hover:bg-amber-500/10 border border-stone-700/50 group-hover:border-amber-500/30 flex items-center justify-center mb-6 transition-colors">
-                {item.icon}
+              <div className="w-12 h-12 rounded-xl bg-stone-800/80 border border-stone-700/60 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-amber-500/10 group-hover:border-amber-500/40 transition-all">
+                {iconMap[item.icon] || <Sparkles className="w-6 h-6 text-amber-400" />}
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-2 font-serif-luxury group-hover:text-amber-300 transition-colors">
+              <h3 className="text-lg font-bold text-white mb-2 font-serif-luxury group-hover:text-amber-300 transition-colors">
                 {item.title}
               </h3>
-              <p className="text-stone-400 text-sm leading-relaxed">
+              <p className="text-stone-400 text-xs sm:text-sm leading-relaxed">
                 {item.description}
               </p>
             </div>
           ))}
         </div>
 
-        {/* Fast Action Banner */}
-        <div className="mt-14 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-stone-900 via-stone-900/90 to-amber-950/40 border border-amber-500/20 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <h4 className="text-lg sm:text-xl font-bold text-white font-serif-luxury">
-              Deseja receber o Memorial Descritivo Completo?
-            </h4>
-            <p className="text-stone-400 text-sm mt-1">
-              Conheça as marcas dos materiais, acabamentos e cronograma oficial da obra.
-            </p>
+        {/* Bottom Banner with Stand address */}
+        <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-gradient-to-r from-stone-900 via-stone-900 to-stone-900/80 border border-stone-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xl">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0 mt-0.5">
+              <MapPin className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[11px] uppercase tracking-wider text-amber-400 font-bold block">
+                Plantão de Vendas & Decorado ({currentDev.shortNeighborhood})
+              </span>
+              <p className="text-sm font-semibold text-white mt-0.5">
+                {currentDev.standAddress}
+              </p>
+            </div>
           </div>
 
           <a
-            href={INTEREST_FORM_URL}
+            href={currentDev.formUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-sm uppercase tracking-wide transition-all shadow-lg hover:shadow-amber-500/20 whitespace-nowrap"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs uppercase tracking-wider transition-colors shrink-0"
           >
-            <span>Tenho Interesse</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>Agendar Visita no Decorado</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </a>
         </div>
       </div>
