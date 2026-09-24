@@ -189,7 +189,7 @@ export const SimulatorSection: React.FC<SimulatorSectionProps> = ({ currentDev }
                     rel="noopener noreferrer"
                     className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-amber-500/20"
                   >
-                    <span>Quero Proposta com Esta Simulação</span>
+                    <span>Tenho Interesse no {currentDev.name} · Enviar Simulação</span>
                     <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>

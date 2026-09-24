@@ -134,6 +134,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ currentDev }) =>
           onClose={() => setSelectedPhoto(null)}
           onSelectPhoto={(photo) => setSelectedPhoto(photo)}
           formUrl={currentDev.formUrl}
+          devName={currentDev.name}
         />
       )}
     </section>

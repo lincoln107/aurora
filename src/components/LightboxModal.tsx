@@ -8,6 +8,7 @@ interface LightboxModalProps {
   onClose: () => void;
   onSelectPhoto: (photo: GalleryPhoto) => void;
   formUrl?: string;
+  devName?: string;
 }
 
 export const LightboxModal: React.FC<LightboxModalProps> = ({
@@ -16,6 +17,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
   onClose,
   onSelectPhoto,
   formUrl = INTEREST_FORM_URL,
+  devName,
 }) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -110,7 +112,7 @@ export const LightboxModal: React.FC<LightboxModalProps> = ({
             rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-stone-950 font-bold text-sm transition-all shadow-lg hover:shadow-amber-500/20 whitespace-nowrap"
           >
-            <span>Tenho Interesse</span>
+            <span>Tenho Interesse no {devName || "Empreendimento"}</span>
             <ExternalLink className="w-4 h-4" />
           </a>
         </div>

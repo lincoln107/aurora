@@ -80,26 +80,46 @@ export const Hero: React.FC<HeroProps> = ({ currentDev, onSelectDev }) => {
         </div>
 
         {/* Primary CTA & Conversion Triggers */}
-        <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-xl">
-          <a
-            href={currentDev.formUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-stone-950 font-extrabold text-sm sm:text-base uppercase tracking-wider shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
-          >
-            <span>Tenho Interesse no {currentDev.shortNeighborhood}</span>
-            <div className="w-6 h-6 rounded-full bg-stone-950/20 flex items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform">
-              <ArrowUpRight className="w-4 h-4 text-stone-950 stroke-[2.5]" />
-            </div>
-          </a>
+        <div className="mt-8 flex flex-col gap-3 max-w-xl">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+            <a
+              href={currentDev.formUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group relative inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-stone-950 font-extrabold text-sm sm:text-base uppercase tracking-wider shadow-2xl shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+            >
+              <span>Tenho Interesse no {currentDev.name}</span>
+              <div className="w-6 h-6 rounded-full bg-stone-950/20 flex items-center justify-center group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform">
+                <ArrowUpRight className="w-4 h-4 text-stone-950 stroke-[2.5]" />
+              </div>
+            </a>
 
-          <a
-            href="#empreendimentos"
-            className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-stone-900/80 hover:bg-stone-800 text-white font-semibold text-sm border border-stone-700/80 hover:border-stone-500 transition-all backdrop-blur-sm"
-          >
-            <span>Ver os 3 Empreendimentos</span>
-            <ChevronRight className="w-4 h-4 text-amber-400" />
-          </a>
+            <a
+              href="#empreendimentos"
+              className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-stone-900/80 hover:bg-stone-800 text-white font-semibold text-sm border border-stone-700/80 hover:border-stone-500 transition-all backdrop-blur-sm"
+            >
+              <span>Ver os 3 Empreendimentos</span>
+              <ChevronRight className="w-4 h-4 text-amber-400" />
+            </a>
+          </div>
+
+          {/* Quick direct buttons for the other 2 developments */}
+          <div className="flex flex-wrap items-center gap-2 text-xs text-stone-400 mt-1">
+            <span className="text-[11px] text-stone-500 font-medium">Ou acesse direto:</span>
+            {DEVELOPMENTS_LIST.filter((d) => d.id !== currentDev.id).map((dev) => (
+              <a
+                key={dev.id}
+                href={dev.formUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-stone-900/90 hover:bg-stone-800 text-amber-300 hover:text-white border border-stone-800 hover:border-amber-500/40 text-[11px] font-semibold transition-colors"
+                title={`Tenho Interesse no ${dev.fullName}`}
+              >
+                <span>Tenho Interesse no {dev.name}</span>
+                <ArrowUpRight className="w-3 h-3 text-amber-400" />
+              </a>
+            ))}
+          </div>
         </div>
 
         {/* Confidence & Privileged Location Signals */}

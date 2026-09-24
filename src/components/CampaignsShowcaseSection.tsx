@@ -166,7 +166,7 @@ export const CampaignsShowcaseSection: React.FC<CampaignsShowcaseSectionProps> =
                       rel="noopener noreferrer"
                       className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 hover:from-amber-300 hover:to-amber-500 text-stone-950 font-bold text-xs uppercase tracking-wider shadow-lg hover:shadow-amber-500/25 transition-all group"
                     >
-                      <span>Tenho Interesse no {dev.shortNeighborhood}</span>
+                      <span>Tenho Interesse no {dev.name}</span>
                       <ExternalLink className="w-4 h-4 transition-transform group-hover:scale-110" />
                     </a>
 

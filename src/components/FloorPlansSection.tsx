@@ -152,7 +152,7 @@ export const FloorPlansSection: React.FC<FloorPlansSectionProps> = ({ currentDev
                   className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs uppercase tracking-wider transition-colors shadow-lg shadow-amber-500/20"
                 >
                   <FileText className="w-4 h-4" />
-                  <span>Solicitar Planta em PDF de {currentDev.shortNeighborhood}</span>
+                  <span>Tenho Interesse no {currentDev.name} · Solicitar Planta</span>
                   <ArrowRight className="w-4 h-4" />
                 </a>
               </div>

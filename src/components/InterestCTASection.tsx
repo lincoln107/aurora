@@ -142,7 +142,7 @@ export const InterestCTASection: React.FC<InterestCTASectionProps> = ({
                   rel="noopener noreferrer"
                   className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-bold text-xs uppercase tracking-wider shadow-lg transition-all"
                 >
-                  <span>Tenho Interesse na Mooca</span>
+                  <span>Tenho Interesse no Aurora Residences</span>
                   <ExternalLink className="w-4 h-4" />
                 </a>
 
@@ -216,7 +216,7 @@ export const InterestCTASection: React.FC<InterestCTASectionProps> = ({
                   rel="noopener noreferrer"
                   className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-bold text-xs uppercase tracking-wider shadow-lg transition-all"
                 >
-                  <span>Tenho Interesse na Cidade Jardim</span>
+                  <span>Tenho Interesse no Empreendimento Jardins</span>
                   <ExternalLink className="w-4 h-4" />
                 </a>
 
@@ -290,7 +290,7 @@ export const InterestCTASection: React.FC<InterestCTASectionProps> = ({
                   rel="noopener noreferrer"
                   className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-stone-950 font-bold text-xs uppercase tracking-wider shadow-lg transition-all"
                 >
-                  <span>Tenho Interesse no Tatuapé</span>
+                  <span>Tenho Interesse no Empreendimento Bentivi</span>
                   <ExternalLink className="w-4 h-4" />
                 </a>
 
